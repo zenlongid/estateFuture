@@ -7,7 +7,7 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'beabeabea1'
 
-    cred = credentials.Certificate('API KEY\csci321-fyp-firebase-adminsdk-1z8qo-568ba51373.json')
+    cred = credentials.Certificate('website\APIT KEY\csci321-fyp-firebase-adminsdk-1z8qo-568ba51373.json')
     firebase_admin.initialize_app(cred, {
         'databaseURL': 'https://csci321-fyp-default-rtdb.asia-southeast1.firebasedatabase.app/'
     
