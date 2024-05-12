@@ -1,2 +1,5 @@
 Flask
 Gunicorn
+pandas
+numpy
+firebase_admin
