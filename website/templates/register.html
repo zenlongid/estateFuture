@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}
+Prediction Page
+{% endblock %}
+
+{% block content %}
+<div id="navbar-placeholder">{% include 'nav.html' %}</div>
+
+
+<body>
+  <!-- Placeholder for the navbar -->
+  <div id="navbar-placeholder"></div>
+
+  <div class="container">
+    <form action="{{ url_for('auth.register') }}" method="post">
+      <h2>Register</h2>
+      <div class="input-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Enter email" required>
+      </div>
+      <div class="input-group">
+        <label for="birthday">Birthday:</label>
+        <input type="date" id="birthday" name="birthday" required>
+      </div>
+      <div class="input-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter password" required>
+        <span id="passwordError" style="color:red;"></span>
+      </div>
+      <button type="submit">Register</button>
+    </form>
+    <br>
+    <div class="login-link">
+      Already have an account? <a href="login.html">Login here</a>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    $(document).ready(function() 
+    {
+      $('#signupForm').submit(function(event) 
+      {
+        const userData = 
+        {
+          email: $('#email').val(),
+          birthday: $('#birthday').val(),
+          password: $('#password').val()
+        };
+        $.ajax(
+        {
+          type: 'POST',
+          url: 'auth/register',
+          contentType: 'application/json',
+          data: JSON.stringify(userData),
+          success: function(response) {  
+            alert('Sign up successful');
+          },
+          error: function(response) {
+            alert('Sign up failed: ' + response.responseText);  
+          }
+        });
+      });
+    });
+  </script>
+{% endblock %}
+
