@@ -71,11 +71,6 @@
 <body>
    
     <div id="navbar-container"> {% include 'nav.html' %}</div>
-    {% if user.is_authenticated %}
-        <h1>Welcome, {{ user.email }}</h1>
-    {% else %}
-        <h1>Welcome, Guest</h1>
-    {% endif %}
 
     
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

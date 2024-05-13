@@ -61,7 +61,6 @@
     <ul>
       <li><a href="/index">Home</a></li>
       <li><a href="https://kaylynnhual.wixsite.com/mysite">About</a></li> 
-      {% if user.is_authenticated %}
       <li><a href="/subscriptionPlans">Pricing Plan</a></li>
       <li><a href="/searchPage">Price Prediction</a></li>
       <li><a href="#">Contact</a></li>
@@ -70,11 +69,9 @@
     
     <div>
       <li></li><a class="btn-link" href="/logout">Logout</a> 
-      {% else %}
       <li><a class="btn-link" href="/FAQ">Register</a></li> 
       <li><a class="btn-link" href="/register">Register</a></li>
       <li><a class="btn-link" href="/login">Login</a></li>
-      {% endif %}
     </div>
     </ul>
   </div>
