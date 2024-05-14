@@ -5,17 +5,169 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookmarks Page</title>
 </head>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+
+    header {
+        font-size: 11px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-align: left;
+        margin-left: 350px; /* Add left margin to the header */
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #061B3E;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+
+    .search-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* Align search bar to the left */
+        background-color: #f2f2f2;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        text-align: left;
+        margin-left: 350px; /* Add left margin to the header */
+    }
+
+    .search-input {
+        width: auto; /* Increased width to 350px */
+        max-width: 80%; /* Adjusted to maintain responsiveness */
+        padding: 10px;
+        border: none;
+        border-right:  #ccc;
+        border-radius: 5px 0 0 5px;
+        outline: none;
+        flex-grow: 1;
+    }
+
+    .search-input::placeholder {
+        text-align: left;
+        padding-left: 10px; /* Adjusted padding for better alignment */
+    }
+
+    .filter-button {
+        padding: 10px 20px;
+        background-color: #061B3E;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: 20px; /* Added margin between search bar and filter button */
+    }
+
+    .filter-button img {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 70%;
+        margin: auto;
+        text-align: left;
+        margin-left: 350px; /* Add left margin to the header */
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .action-button {
+        padding: 5px 10px;
+        background-color: #061B3E;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .pagination-container {
+        background-color: #f2f2f2;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        text-align: left;
+        margin-left: 350px; /* Add left margin to the header */
+    }
+
+    .pagination span,
+    .pagination select,
+    .pagination button {
+        margin: 5px;
+        font-size: 14px;
+    }
+
+    /* Adjustments for sidebar */
+    .sidebar-space {
+        margin-left: 250px; /* Space for the sidebar */
+        padding-left: 20px; /* Add some padding to the left side of the main content */
+    }
+
+    .button-like-link {
+        display: inline-block;
+        padding: 0.5em 1em;
+        background-color: #061B3E;
+        color: white;
+        text-decoration: none;
+        border-radius: 0.25em;
+        font-size: 16px;
+        text-align: center;
+        margin: 0.5em;
+    }
+
+
+</style>
 <body>
     <h1>Bookmarked Addresses</h1>
     
-    <div id="bookmarks-container">
+    <table>
+        <tr> 
+            <th>Town</th>
+            <th>Address</th>
+            <th>Flat Type</th>
+            <th>Storey Range</th>
+            <th>Remaining Lease</th>
+
+            <!-- Add more table headers for additional details -->
+        </tr>
         {% for address in bookmarks %}
-            <div>
-                <h3>{{ address.address }}</h3>
-                <p><strong>Postal Code:</strong> {{ address.postal_code }}</p>
-                <!-- Add more details here as needed -->
-            </div>
+            <tr>
+                <td>{{address.town}}</td>
+                <td>{{address.address}}</td>
+                <td>{{ address.flat_type }}</td>
+                <td>{{ address.storey_range }}</td>
+                <td>{{ address.remaining_lease_months}}</td>
+                <!-- Add more table cells for additional details -->
+            </tr>
         {% endfor %}
+    </table>
     </div>
 </body>
 </html>
