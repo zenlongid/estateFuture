@@ -128,43 +128,37 @@ def display_item():
             print("Unit Display Key:", unit_display['key'])
         else:
             print("Key 'key' not found in unit_display dict")
-   
-
-    #unit_display_df = json.loads(unit_display)
     
-    if isinstance(unit_display, dict):
-        print("is an object")
+    return render_template('predictResult.html', user=user, unit_display=unit_display)
+
+@predict.route('/addBookmark/<unit_key>', methods=['POST'])
+def AddBookmark(unit_key):
+    if current_user.is_authenticated:
+        user_id = current_user.id
+        print("User ID: ", user_id)
+        print("Unit Key: ", unit_key)
+
+        ref = db.reference(f'/users/{user_id}/bookmarks')
+
+        # Check if 'test' key exists in bookmarks
+        bookmarks_snapshot = ref.get()
+        if isinstance(bookmarks_snapshot, list):
+            if unit_key in bookmarks_snapshot:
+                return jsonify({'message': 'Bookmark already exists'}), 409  # Return 409 Conflict status code
+            
+        elif isinstance(bookmarks_snapshot, dict):
+            if unit_key in bookmarks_snapshot.values():
+                return jsonify({'message': 'Bookmark already exists'}), 409 
+            # Check if 'test' is in the list
+            if "test" in bookmarks_snapshot:
+                # Remove 'test' from the list
+                bookmarks_snapshot.remove("test")
+                print("Deleted 'test' bookmark")
+                ref.set(bookmarks_snapshot)  # Update the bookmarks list in the database
+
+        # Push the current unit key
+        ref.push().set(unit_key)  # Add unit_key to the list of bookmarks
+        return jsonify({'message': 'Bookmark added successfully'})
     else:
-        print("not an object")
-
-    lambda_endpoint = 'https://aqiqs40n6a.execute-api.ap-southeast-2.amazonaws.com/deployment/predictDemo'
-
-    unit_display = json.dumps(unit_display)
+        return jsonify({'message': 'User not authenticated'}), 401  # Return 401 Unauthorized status code
     
-    response = requests.post(lambda_endpoint, json=unit_display)
-
-    if response.status_code == 200:
-        lambda_response = response.json()
-        print("Lambda Response: ", lambda_response)
-    else:
-        return "Error in making prediction", 500
-    #dropping unnecessary columns to pass into model
-    #input_features = rf.feature_names_in_
-    #columns_to_drop = [col for col in unit_display_df.columns if col not in input_features]
-    #unit_display_df = unit_display_df.drop(columns=columns_to_drop)
-
-    #unit_display_df = unit_display_df.reindex(columns=input_features, fill_value=0)
-
-    #input feature to send to AWS
-    #input_features = unit_display_df.to_json(orient='records')
-
-    #make prediction            
-    #prediction = make_prediction(rf, unit_display_df)
-    #print("Prediction: ", prediction)
-
-    #convert df to html
-    #unit_display_html = unit_display_df.to_html()  
-    #return render_template('predictResult.html', user=user, unit_display=unit_display, unit_display_html=unit_display_html, prediction=prediction[0])
-    
-
-    return render_template('index.html', user = current_user)

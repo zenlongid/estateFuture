@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmarks Page</title>
+</head>
+<body>
+    <h1>Bookmarked Addresses</h1>
+    
+    <div id="bookmarks-container">
+        {% for address in bookmarks %}
+            <div>
+                <h3>{{ address.address }}</h3>
+                <p><strong>Postal Code:</strong> {{ address.postal_code }}</p>
+                <!-- Add more details here as needed -->
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

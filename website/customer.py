@@ -20,7 +20,7 @@ def FAQ():
 @login_required
 @customer.route('/subscriptionPlans')
 def paymentPlans():
-    return render_template('subscriptionPlans.html')
+    return render_template('subscriptionPlans.html', user=current_user)
 
 @customer.route('/processPayment', methods=['POST'])
 def processPayment():
@@ -73,5 +73,28 @@ def calculateAmount(subscriptionPlan):
     }
     return base_prices.get(subscriptionPlan, '0.0')
 
+@customer.route('/bookmarksPage')
+def bookmarksPage():
+    if current_user.is_authenticated:
+        user_id = current_user.id
+        ref = db.reference(f'/users/{user_id}/bookmarks')
+        bookmarks_snapshot = ref.get()
+        print("Bookmarks Snapshot: ", bookmarks_snapshot)
+        bookmarks_details = []
 
+        if bookmarks_snapshot:
+            for bookmark_key in bookmarks_snapshot.values():
+                # Assuming 'addresses' is the reference to the addresses in your database
+                print("Bookmark Key: ", bookmark_key)
+                address_ref = db.reference(f'/testfinal/{bookmark_key}')
+                address_details = address_ref.get()
+                if address_details:
+                    bookmarks_details.append(address_details)
+
+            # Redirect to bookmarks page with the bookmarks details as URL parameters
+            return render_template('bookmarksPage.html', bookmarks=bookmarks_details)
+        else:
+            return jsonify({'message': 'No bookmarks found'}), 404
+    else:
+        return jsonify({'message': 'User not authenticated'}), 401
 
