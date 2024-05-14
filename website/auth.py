@@ -11,7 +11,7 @@ auth = Blueprint('auth', __name__)
 def login():
     if request.method == 'GET':
         print("GET request received.")
-        return render_template('login.html')
+        return render_template('login.html', user = current_user)
 
     else:
         print("POST request received.")
@@ -53,9 +53,9 @@ def login():
                     login_user(user, remember=True)
                     print("after")
                     if user_data['profile'] == 'Admin':
-                        return redirect(url_for('admin.adminDashboard'))
+                        return redirect(url_for('admin.adminDashboard', user = current_user))
                     else:
-                        return redirect(url_for('views.index'))
+                        return redirect(url_for('views.index', user = current_user))
                 else:
                     return jsonify({'message': 'Invalid email or password'}), 401
         
@@ -72,9 +72,11 @@ def register():
     print("Received a POST request.")
     email = request.form.get('email')
     password = request.form.get('password')
+    name = request.form.get('name')
     birthday = request.form.get('birthday')
     profile = "Customer"
     suspended = request.form.get('suspended', 'False')
+    bookmarks = ['test']
 
     #hashing the password for security
     md5 = hashlib.md5()
@@ -82,7 +84,7 @@ def register():
     hashed_password = md5.hexdigest()
     
     #removing special characters from email
-    email_key = email.replace('.', '').replace('@', '')
+    email_key = email.replace('.', '').replace('@', '')    
 
     try:
         ref_path = f'/users/{email_key}'
@@ -90,9 +92,11 @@ def register():
         user_ref = db.reference(ref_path)
         user_ref.set({
             'email': email,
+            'name': name,
             'password': hashed_password,
             'profile': profile,
             'birthday': birthday,
+            'bookmarks': bookmarks,
             'suspended': suspended
         })
 
@@ -105,4 +109,4 @@ def register():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('views.index'))

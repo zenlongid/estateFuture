@@ -55,7 +55,8 @@
     crossorigin="anonymous"></script>
 
   <div class="navbar">
-    <a href="/index"><img src="/website/templates/Images/brandLogo4.png" width="200" height="50" alt=""></a>
+    <a href="/index"><img src="{{ url_for('static', filename='Images/brandLogo4.png') }}" width="200" height="50"></a>
+   
 
     <ul>
       {% if user.is_authenticated %}

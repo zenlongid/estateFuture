@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
+  <div id="navbar-placeholder">{% include 'nav.html' %}</div>
   <div class="container mt-5">
     <h2>Login</h2> 
     <form id="loginForm" action="{{ url_for('auth.login') }}" method="POST">
