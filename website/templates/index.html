@@ -17,8 +17,7 @@
 
         .hero {
             text-align: center;
-            padding: 200px 20px;
-            background: url('Images/Stiletto House.jpg') no-repeat center center;
+            padding: 400px 20px;
             background-size: cover;
             color: #061B3E;
         }
@@ -55,26 +54,60 @@
             max-width: 100px;
             margin: 20px auto 20px;
         }
-
-        .jumbotron {
-            background-color: white;
-            margin-top: 50px;
-        }
-        .btn-trial {
-            background-color: #061B3E;
-            color: white;
-            border: none;
-        }
     </style>
 </head>
 
 <body>
-   
     <div id="navbar-container"> {% include 'nav.html' %}</div>
+    <div class="container">
+        <div class="text-center">
+            <h1 class="display-4">Estate Future</h1>
+            <p class="lead">Revolutionizing real estate valuation with machine learning</p>
+            <hr class="my-4">
+                <p>In the ever-evolving landscape of real estate, accurate property valuation is crucial. Recognizing this, Estate Future aims to revolutionize this process by developing a user-friendly platform that harnesses the powers of machine learning to predict accurate real estate prices in Singapore.</p>
+                <p>Our predictive model considers a myriad of factors, including location, amenities, transportation, and market trends, to provide you with the most accurate valuation possible.</p>
+                 <button type="button" class="btn" onclick="window.location.href='/searchPage'" style="background-color: #061B3E; color: white;">Valuate my property</button>
+            </hr>
+        </div>
+    </div>
 
-    
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <div class="container">
+        <div class="row">
+            <h1 class="display-4 text-center">Why Us?</h1>
 
+            <div class="col-md-4">
+                <h2>Comprehensive Data Gathering</h2>
+                <p>We collect extensive data to ensure our predictions are as accurate as possible.</p>
+            </div>
+
+            <div class="col-md-4">
+                <h2>Model Development</h2>
+                <p>Our predictive model is continuously refined to adapt to changing market conditions.</p>
+            </div>
+
+            <div class="col-md-4">
+                <h2>User Interface Design</h2>
+                <p>Our platform offers an intuitive user experience for easy access to property valuation insights.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Geospatial Analysis</h2>
+                <p>We analyze location-related factors to provide precise valuations for properties.</p>
+            </div>
+
+            <div class="col-md-4">
+                <h2>Data Visualization</h2>
+                <p>We present insights through interactive data visualization tools for better understanding.</p>
+            </div>
+
+            <div class="col-md-4">
+                <h2>Trained Model Deployment</h2>
+                <p>Our trained model is deployed on the website across devices for easy access.</p>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
