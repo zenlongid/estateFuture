@@ -4,3 +4,4 @@ Gunicorn
 pandas
 numpy
 firebase_admin
+paypalrestsdk

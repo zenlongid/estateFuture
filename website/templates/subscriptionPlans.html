@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Our Plans</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* Your CSS styles here */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="pricing-header py-5">
+      <h2>Our Plans</h2>
+      <p>Predict your future, Predict your life</p>
+    </div>
+    <div class="card-deck" id="pricing-plans">
+      <!-- Pricing plans will be dynamically added here -->
+    </div>
+    <div class="trial-info">
+      <button class="btn btn-primary btn-trial" onclick="window.location.href='TrialPlan.html';">Try 7 Day Trial</button>
+    </div>
+  </div>
+
+  <!-- PayPal script for handling payment success -->
+  <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+  <script>
+    // Define pricing plans data
+    const pricingPlans = [
+      {
+        type: 'Monthly',
+        description: 'Unlock unlimited Price Prediction Valuations',
+        price: '$39.95',
+        plan: 'monthly'
+      },
+      {
+        type: 'Quarterly',
+        description: 'Unlock unlimited Price Prediction Valuations',
+        price: '$19.95 per month',
+        totalPrice: '$59.85',
+        plan: 'quarterly'
+      },
+      {
+        type: 'Annual',
+        description: 'Unlock unlimited Price Prediction Valuations',
+        price: '$9.95 per month',
+        totalPrice: '$119.40',
+        plan: 'annual'
+      }
+    ];
+
+    // Function to render pricing plans
+    function renderPricingPlans() {
+      const container = document.getElementById('pricing-plans');
+      pricingPlans.forEach(plan => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+
+        const cardBody = document.createElement('div');
+        cardBody.classList.add('card-body', 'd-flex', 'flex-column');
+
+        const title = document.createElement('h5');
+        title.classList.add('card-title');
+        title.textContent = plan.type;
+
+        const description = document.createElement('p');
+        description.classList.add('card-text');
+        description.textContent = plan.description;
+
+        const price = document.createElement('p');
+        price.classList.add('card-text');
+        price.innerHTML = `<strong>${plan.price}</strong>`;
+
+        if (plan.totalPrice) {
+          const totalPrice = document.createElement('p');
+          totalPrice.classList.add('card-text', 'total-price');
+          totalPrice.innerHTML = `Total price: <strong>${plan.totalPrice}</strong>`;
+          cardBody.appendChild(totalPrice);
+        }
+
+        const button = document.createElement('button');
+        button.classList.add('btn', 'btn-primary', 'btn-block', 'mt-auto');
+        button.textContent = `Choose ${plan.type}`;
+        button.dataset.plan = plan.plan;
+        button.addEventListener('click', () => {
+          initiatePayment(plan.plan);
+        });
+
+        cardBody.appendChild(title);
+        cardBody.appendChild(description);
+        cardBody.appendChild(price);
+        cardBody.appendChild(button);
+
+        card.appendChild(cardBody);
+        container.appendChild(card);
+      });
+    }
+
+    // Function to initiate payment
+    function initiatePayment(plan) {
+      // Make a POST request to the backend to initiate payment
+      fetch('/processPayment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ subscriptionPlan: plan })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Redirect to PayPal approval URL
+          window.location.href = data.approvalUrl;
+        } else {
+          alert('Payment initiation failed: ' + data.error);
+        }
+      })
+      .catch(error => {
+        console.error('Error initiating payment:', error);
+        alert('Error initiating payment. Please try again later.');
+      });
+    }
+
+    // Call renderPricingPlans function when the page loads
+    window.addEventListener('load', renderPricingPlans);
+  </script>
+</body>
+</html>
