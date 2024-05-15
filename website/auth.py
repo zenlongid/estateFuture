@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, render_template, request, redirect, url_for, session
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, session, flash
 from firebase_admin import credentials, auth, db
 from flask_login import login_user, logout_user, login_required, logout_user, current_user
 from .models import User
@@ -50,9 +50,10 @@ def login():
                     print("before")
                     print(user)
                     print("type of user: ", type(user))
+                    flash(f'You were successfully logged in as {user.profile} ', category='success')
                     login_user(user, remember=True)
                     print("after")
-                    if user_data['profile'] == 'Admin':
+                    if user_data['profile'] == 'Admin':  
                         return redirect(url_for('admin.adminDashboard', user = current_user))
                     else:
                         return redirect(url_for('views.index', user = current_user))

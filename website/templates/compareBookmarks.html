@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Compare Bookmarked Addresses{% endblock %}
+
+{% block styles %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Compare Bookmarked Addresses</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Town</th>
+            <th>Address</th>
+            <th>Flat Type</th>
+            <th>Storey Range</th>
+            <th>Remaining Lease Months</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bookmark_key, address in addresses %}
+        <tr>
+            <td>{{ address.town }}</td>
+            <td>{{ address.address }}</td>
+            <td>{{ address.flat_type }}</td>
+            <td>{{ address.storey_range }}</td>
+            <td>{{ address.remaining_lease_months }}</td>
+            <td>{{bookmark_key}}</td>
+            <td><button type="button" class="btn btn-primary predict-btn" data-id="{{ bookmark_key }}">Predict</button></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.predict-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const unitId = this.dataset.id;
+
+                fetch('/predictComparedBookmarks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ unit_id: unitId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Error:', data.error);
+                    } else {
+                        console.log('Prediction:', data.prediction);
+                        alert(`Prediction for ${unitId}: ${data.prediction}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

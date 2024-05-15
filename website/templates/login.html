@@ -1,14 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Login Page</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-  <div id="navbar-placeholder">{% include 'nav.html' %}</div>
-  <div class="container mt-5">
-    <h2>Login</h2> 
+{% extends "base.html" %}
+
+{% block title %}Login Page{% endblock %}
+
+{% block styles%}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Login</h2> 
     <form id="loginForm" action="{{ url_for('auth.login') }}" method="POST">
       <div class="form-group">
         <label for="email">Email:</label>
@@ -21,31 +20,33 @@
       <button type="submit" class="btn btn-primary">Login</button>
     </form>
   </div>
-  <script>
-    $(document).ready(function() 
+{% endblock %}
+
+{% block scripts %}
+<script>
+  $(document).ready(function() 
+  {
+    $('#loginForm').submit(function(event) 
     {
-      $('#loginForm').submit(function(event) 
+      const userData = 
       {
-        const userData = 
-        {
-          email: $('#email').val(),
-          password: $('#password').val()
-        };
-        $.ajax(
-        {
-          type: 'POST',
-          url: 'auth/login',
-          contentType: 'application/json',
-          data: {email: email, password: password},
-          success: function(response) {  
-            alert('Login successful');
-          },
-          error: function(response) {
-            alert('Log in failed: ' + response.responseText);  
-          }
-        });
+        email: $('#email').val(),
+        password: $('#password').val()
+      };
+      $.ajax(
+      {
+        type: 'POST',
+        url: 'auth/login',
+        contentType: 'application/json',
+        data: {email: email, password: password},
+        success: function(response) {  
+          alert('Login successful');
+        },
+        error: function(response) {
+          alert('Log in failed: ' + response.responseText);  
+        }
       });
     });
-  </script>
-</body>
-</html>
+  });
+</script>
+{% endblock %}
