@@ -169,6 +169,7 @@ def showCompareBookmarks():
     selected_addresses = session.get('selected_addresses', [])
     return render_template('compareBookmarks.html', addresses=selected_addresses, user=current_user)
 
+@login_required
 @customer.route('/userDetail/', methods=['GET', 'POST'])
 def view_user():
 
@@ -179,7 +180,7 @@ def view_user():
 
     if user:
         print("Found user: ", user_id)
-        return render_template('userAccount.html', user=user, user_id=user_id)
+        return render_template('userAccount.html', user = current_user, userDetails=user, user_id=user_id)
     else:
         return "User not found!"
     
