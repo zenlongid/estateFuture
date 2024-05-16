@@ -1,122 +1,142 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Include Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <title>Estate Future - Predict Your Future</title>
-    <style>
-        body,
-        h1,
-        p {
-            margin: 0;
-            padding: 0;
-        }
+{% block title %}Estate Future - Predict Your Future{% endblock %}
 
-        .hero {
-            text-align: center;
-            padding: 200px 20px;
-            background-size: cover;
-        }
+{% block styles %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body, h1, p {
+        margin: 0;
+        padding: 0;
+    }
 
-        .search-box {
-            max-width: 400px;
-            margin: 20px auto;
-            position: relative;
-        }
+    .hero {
+        text-align: center;
+        padding: 200px 20px;
+        background-size: cover;
+        background-position: center;
+    }
 
-        .search-box input {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 20px;
-            padding-right: 100px;
-        }
+    .hero h1 {
+        color: white;
+        margin-bottom: 20px;
+        font-size: 3rem; 
+    }
 
-        .search-box button {
-            position: absolute;
-            right: 0;
-            top: 0;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 0 20px 20px 0;
-            cursor: pointer;
-        }
+    .search-box {
+        max-width: 400px;
+        margin: 20px auto;
+        position: relative;
+    }
 
-        .container {
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border-radius: 40px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            max-width: 100px;
-            margin: 20px auto 20px;
-        }
-    </style>
-</head>
+    .search-box input {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 20px;
+        padding-right: 100px;
+    }
 
-<body>
-    <div id="navbar-container"> {% include 'nav.html' %}</div>
-    <div class="hero" style="background-image: url(''); text-align: center; " id="background"> 
-        <h1 style="color: white;">Predict Your Future</h1>
+    .search-box button {
+        position: absolute;
+        right: 0;
+        top: 0;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 0 20px 20px 0;
+        cursor: pointer;
+    }
+
+    .main-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 40px 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        max-width: 80%;
+        margin: 20px auto;
+    }
+
+    .main-container h1 {
+        font-size: 2.5rem; 
+    }
+
+    .main-container p {
+        font-size: 1.1rem; 
+    }
+
+    .btn-primary {
+        font-size: 1.2rem;
+    }
+
+    .section-container {
+        margin-top: 40px;
+    }
+
+    .section-container h1 {
+        margin-bottom: 20px;
+        font-size: 2.5rem; 
+    }
+
+    .section-container p {
+        margin-bottom: 20px;
+        font-size: 1.1rem; 
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero" id="background">
+    <h1>Predict Your Future</h1>
+</div>
+<div class="main-container">
+    <div class="text-center">
+        <h1 class="display-4">Estate Future</h1>
+        <p class="lead">Revolutionizing real estate valuation with machine learning</p>
+        <hr class="my-4">
+        <p>In the ever-evolving landscape of real estate, accurate property valuation is crucial. Recognizing this, Estate Future aims to revolutionize this process by developing a user-friendly platform that harnesses the powers of machine learning to predict accurate real estate prices in Singapore.</p>
+        <p>Our predictive model considers a myriad of factors, including location, amenities, transportation, and market trends, to provide you with the most accurate valuation possible.</p>
+        <button type="button" class="btn btn-primary" onclick="window.location.href='/searchPage'" style="background-color: #061B3E; color: white;">Valuate my property</button>
     </div>
-    <div class="container">
-        <div class="text-center">
-            <h1 class="display-4">Estate Future</h1>
-            <p class="lead">Revolutionizing real estate valuation with machine learning</p>
-            <hr class="my-4">
-                <p>In the ever-evolving landscape of real estate, accurate property valuation is crucial. Recognizing this, Estate Future aims to revolutionize this process by developing a user-friendly platform that harnesses the powers of machine learning to predict accurate real estate prices in Singapore.</p>
-                <p>Our predictive model considers a myriad of factors, including location, amenities, transportation, and market trends, to provide you with the most accurate valuation possible.</p>
-                 <button type="button" class="btn" onclick="window.location.href='/searchPage'" style="background-color: #061B3E; color: white;">Valuate my property</button>
-            </hr>
+</div>
+
+<div class="main-container section-container">
+    <h1 class="display-4 text-center">Why Us?</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Comprehensive Data Gathering</h2>
+            <p>We collect extensive data to ensure our predictions are as accurate as possible.</p>
+        </div>
+        <div class="col-md-4">
+            <h2>Model Development</h2>
+            <p>Our predictive model is continuously refined to adapt to changing market conditions.</p>
+        </div>
+        <div class="col-md-4">
+            <h2>User Interface Design</h2>
+            <p>Our platform offers an intuitive user experience for easy access to property valuation insights.</p>
         </div>
     </div>
-
-    <div class="container">
-        <div class="row">
-            <h1 class="display-4 text-center">Why Us?</h1>
-
-            <div class="col-md-4">
-                <h2>Comprehensive Data Gathering</h2>
-                <p>We collect extensive data to ensure our predictions are as accurate as possible.</p>
-            </div>
-
-            <div class="col-md-4">
-                <h2>Model Development</h2>
-                <p>Our predictive model is continuously refined to adapt to changing market conditions.</p>
-            </div>
-
-            <div class="col-md-4">
-                <h2>User Interface Design</h2>
-                <p>Our platform offers an intuitive user experience for easy access to property valuation insights.</p>
-            </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Geospatial Analysis</h2>
+            <p>We analyze location-related factors to provide precise valuations for properties.</p>
         </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <h2>Geospatial Analysis</h2>
-                <p>We analyze location-related factors to provide precise valuations for properties.</p>
-            </div>
-
-            <div class="col-md-4">
-                <h2>Data Visualization</h2>
-                <p>We present insights through interactive data visualization tools for better understanding.</p>
-            </div>
-
-            <div class="col-md-4">
-                <h2>Trained Model Deployment</h2>
-                <p>Our trained model is deployed on the website across devices for easy access.</p>
-            </div>
+        <div class="col-md-4">
+            <h2>Data Visualization</h2>
+            <p>We present insights through interactive data visualization tools for better understanding.</p>
+        </div>
+        <div class="col-md-4">
+            <h2>Trained Model Deployment</h2>
+            <p>Our trained model is deployed on the website across devices for easy access.</p>
         </div>
     </div>
-</body>
+</div>
+{% endblock %}
 
+{% block scripts %}
 <script>
     document.getElementById('background').style.backgroundImage = "url('{{ url_for('static', filename='Images/house.jpg') }}')";
     document.getElementById('background').style.backgroundRepeat = "no-repeat";
     document.getElementById('background').style.backgroundPosition = "center center";
     document.getElementById('background').style.backgroundSize = "cover";
 </script>
-
-</html>
+{% endblock %}
