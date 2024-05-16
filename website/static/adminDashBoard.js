@@ -80,9 +80,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Firebase Data fetch for Subscription Pie Chart
-    function fetchSubscriptionData() {
-        const databaseRef = firebase.database().ref('userData'); // Adjust this path as needed
-        databaseRef.once('value', snapshot => {
+    function fetchSubscriptionData() 
+    {
+        const databaseRef = firebase.database().ref('users'); // Adjust this path as needed
+        databaseRef.once('value', snapshot => 
+            {
             if (!snapshot.exists()) {
                 console.log("No data available");
                 return;
@@ -90,17 +92,28 @@ document.addEventListener('DOMContentLoaded', function() {
             const subscriptionTypes = { 'Basic': 0, 'Monthly': 0, 'Quarterly': 0, 'Annual': 0 };
             snapshot.forEach(childSnapshot => {
                 const user = childSnapshot.val();
-                const subscriptionType = user.Subscription;  // Assuming 'Subscription' is the correct key
-                if (subscriptionTypes.hasOwnProperty(subscriptionType)) {
+                const subscriptionType = user.profile; 
+
+                if(subscriptionType =='Admin')
+                    {
+                        return;
+                    }
+                if (subscriptionTypes.hasOwnProperty(subscriptionType)) 
+                    {
                     subscriptionTypes[subscriptionType]++;  // Increment the count for the subscription type
-                } else {
+                } 
+                else 
+                {
                     console.log("Unexpected subscription type: ", subscriptionType);
                 }
             });
             console.log("Subscription Types: ", subscriptionTypes);
-            if (Object.keys(subscriptionTypes).length > 0) {
+            if (Object.keys(subscriptionTypes).length > 0) 
+                {
                 displaySubscriptionChart(subscriptionTypes);
-            } else {
+            }
+            else 
+            {
                 console.log("No subscription types found");
             }
         }).catch(error => {

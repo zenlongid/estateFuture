@@ -62,6 +62,7 @@
       <li><a class="btn-link" href="/subscriptionPlans">Pricing Plan</a></li>
       <li><a class="btn-link" href="/searchPage">Price Prediction</a></li>
       <li><a class="btn-link" href="/bookmarksPage">Bookmarks</a></li>
+      <li><a class="btn-link" href="{{ url_for('customer.view_user', user_id=user_key) }}">Profile</a></li>
       <li><a class="btn-link" href="/logout">Logout</a></li>
       {% else %}
       <li><a href="/index">Home</a></li>

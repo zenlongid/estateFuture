@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Page{% endblock %}
+
+{% block styles%}
+<style>
+    .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 100%;
+    }
+    .form-group label {
+        font-weight: bold;
+    }
+    .btn-primary, .btn-success {
+        width: 48%;
+    }
+    .btn-container {
+        display: flex;
+        justify-content: space-between;
+    }
+    .alert {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header>
+        <h1 class="text-center">Account Details</h1>
+    </header>
+    
+    <div class="alert alert-danger" id="alert" role="alert">
+        Passwords do not match!
+    </div>
+
+    <form id="update-form" action="{{ url_for('customer.UserUpdateUserDetails') }}" method="POST">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control editable-field" id="name" name="name" value="{{ user.name }}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control editable-field" id="email" name="email" value="{{ user.email }}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="birthday">Date of Birth:</label>
+            <input type="date" class="form-control editable-field" id="birthday" name="birthday" value="{{ user.birthday }}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="password">New Password</label>
+            <input type="password" class="form-control editable-field" id="password" name="password" readonly>
+        </div>
+        <div class="form-group">
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" class="form-control editable-field" id="confirm-password" name="confirm-password" readonly>
+        </div>
+        <div class="form-group">
+            <label for="profile">Profile:</label>
+            <input type="text" class="form-control editable-field" id="profile" name="profile" value="{{ user.profile }}" readonly>
+        </div>
+        <div class="btn-container">
+            <button type="button" id="edit-button" class="btn btn-primary">Edit</button>
+            <button type="button" id="update-button" class="btn btn-success" style="display: none;">Update</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const editButton = document.getElementById("edit-button");
+    const updateButton = document.getElementById("update-button");
+    const editableFields = document.querySelectorAll(".editable-field");
+
+    editButton.addEventListener("click", function() {
+        editableFields.forEach(function(field) {
+            field.removeAttribute("readonly");
+        });
+        editButton.style.display = "none";
+        updateButton.style.display = "block";
+    });
+
+    updateButton.addEventListener("click", function() {
+        const passwordField = document.getElementById("password");
+        const confirmPasswordField = document.getElementById("confirm-password");
+
+        // Check if passwords match
+        if (passwordField.value !== confirmPasswordField.value) {
+            alert("Passwords do not match!");
+            return;
+        }
+
+        // Hash the password using MD5
+        if (passwordField.value) {
+            const hashedPassword = md5(passwordField.value);
+            passwordField.value = hashedPassword;
+            confirmPasswordField.value = hashedPassword; // Ensure both fields match after hashing
+        }
+
+        editableFields.forEach(function(field) {
+            field.setAttribute("readonly", "readonly");
+        });
+        editButton.style.display = "block";
+        updateButton.style.display = "none";
+
+        // Submit the form
+        document.getElementById("update-form").submit();
+    });
+});
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}

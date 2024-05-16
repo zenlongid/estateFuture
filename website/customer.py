@@ -168,3 +168,34 @@ def compareBookmarks():
 def showCompareBookmarks():
     selected_addresses = session.get('selected_addresses', [])
     return render_template('compareBookmarks.html', addresses=selected_addresses, user=current_user)
+
+@customer.route('/userDetail/', methods=['GET', 'POST'])
+def view_user():
+
+    user_id = current_user.get_id()
+    user_ref = db.reference(f'/users/{user_id}')
+    user = user_ref.get()
+    print(user)
+
+    if user:
+        print("Found user: ", user_id)
+        return render_template('userAccount.html', user=user, user_id=user_id)
+    else:
+        return "User not found!"
+    
+@customer.route('/UserUpdateUserDetails/', methods=['POST'])
+def UserUpdateUserDetails():
+    user_id = current_user.get_id()
+    user_ref = db.reference(f'users/{user_id}')
+    
+    # Get the form data and prepare the update data
+    update_data = {}
+    for key, value in request.form.items():
+        if key == 'confirm-password':
+            continue  # Skip the confirm-password field
+        update_data[key] = value
+        print(f"Updating {key} to {value}")
+
+    # Update the user data in Firebase
+    user_ref.update(update_data)
+    return redirect(url_for('views.index', user_id=user_id))

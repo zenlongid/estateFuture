@@ -75,7 +75,7 @@ def register():
     password = request.form.get('password')
     name = request.form.get('name')
     birthday = request.form.get('birthday')
-    profile = "Customer"
+    profile = "Basic"
     suspended = request.form.get('suspended', 'False')
     bookmarks = ['test']
 
