@@ -19,7 +19,7 @@ def FAQ():
 
 @login_required
 @customer.route('/subscriptionPlans')
-def paymentPlans():
+def subscriptionPlans():
     return render_template('subscriptionPlans.html', user=current_user)
 
 @customer.route('/processPayment', methods=['POST'])
@@ -28,30 +28,38 @@ def processPayment():
     requested_plan = request.json['subscriptionPlan']
     amount = calculateAmount(requested_plan)
 
+    # Map subscription plans to profile names
+    plan_to_profile = {
+        'monthly': 'Monthly',
+        'quarterly': 'Quarterly',
+        'annual': 'Annual'
+    }
+
+    # Get the corresponding profile name for the selected plan
+    new_profile = plan_to_profile.get(requested_plan, 'Paying Customer')
+
     payment = paypalrestsdk.Payment({
         "intent": "sale",
-        "payer": 
-        {
+        "payer": {
             "payment_method": "paypal"
         },
-        "transactions": [
-            {
+        "transactions": [{
             "amount": {
                 "total": amount,
                 "currency": "SGD"
             }
         }],
-        "redirect_urls":
-        {
+        "redirect_urls": {
             "return_url": url_for('views.index', _external=True, user=current_user),
             "cancel_url": url_for('customer.payment_cancel', _external=True)
         }
     })
 
     if payment.create():
-        current_user.profile = 'Paying Customer'
+        # Update the user's profile
+        current_user.profile = new_profile
         users_ref = db.reference('users')
-        users_ref.child(current_user.get_id()).update({'profile': 'Paying Customer'})
+        users_ref.child(user_id).update({'profile': new_profile})
         return jsonify({'success': True, 'approvalUrl': payment.links[1].href})
     else:
         return jsonify({'success': False, 'error': payment.error['message']}), 500

@@ -1,7 +1,6 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
 from firebase_admin import db
-#from joblib import load
-import pickle
+from joblib import load
 from flask_login import login_required, current_user
 import pandas as pd
 import numpy as np
@@ -10,14 +9,17 @@ import json
 
 predict = Blueprint('predict', __name__)
 
-#loading trained model
-#rf = load('C:\\Users\\Zen\\Documents\\GitHub\\Local\\TrainedModels\\rf.joblib')
-#rf = load('C:\\Users\\admin\\Desktop\\Dataset\\randomForest.joblib')
-
-@predict.route('/searchPage', methods=['GET', 'POST'])
 @login_required
+@predict.route('/searchPage')
 def searchPage():
-    user = current_user
+    user_id  = current_user.id
+
+    user_ref = db.reference(f'/users/{user_id}')
+    user = user_ref.get()
+    if user.get('profile') == "Basic":
+        flash('Subscribe to one of our plans first or try a 7 day trial', 'warning')
+        return redirect(url_for('customer.subscriptionPlans'))  # Redirect to a different page
+
     return render_template('searchPage.html', user=user)
     
 @predict.route('/searchByPostal', methods=['GET', 'POST'])
