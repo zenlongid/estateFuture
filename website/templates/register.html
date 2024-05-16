@@ -1,77 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register page</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='/style.css') }}">
-</head>
-<body>
-  <div id="navbar-placeholder">{% include 'nav.html' %}</div>
+{% extends "base.html" %}
 
-  <div class="container">
-    <form action="{{ url_for('auth.register') }}" method="post">
-      
-      <h2>Register</h2>
-      <div class="input-group">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" placeholder="Enter email" required>
-      </div>
+{% block title %}Register Page{% endblock %}
 
-      <div class="input-group">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" placeholder="Enter Name" required>
-      </div>
-      
-      <div class="input-group">
-        <label for="birthday">Birthday:</label>
-        <input type="date" id="birthday" name="birthday" required>
-      </div>
+{% block styles %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='/style.css') }}">
+{% endblock %}
 
-      <div class="input-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" placeholder="Enter password" required>
-        <span id="passwordError" style="color:red;"></span>
-      </div>
-      <button type="submit">Register</button>
-    </form>
-    <br>
-    <div class="login-link">
-      Already have an account? <a href="login.html">Login here</a>
+{% block content %}
+<div class="container">
+  <form action="{{ url_for('auth.register') }}" method="post">
+    
+    <h2>Register</h2>
+    <div class="input-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" placeholder="Enter email" required>
     </div>
+
+    <div class="input-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" placeholder="Enter Name" required>
+    </div>
+    
+    <div class="input-group">
+      <label for="birthday">Birthday:</label>
+      <input type="date" id="birthday" name="birthday" required>
+    </div>
+
+    <div class="input-group">
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" placeholder="Enter password" required>
+      <span id="passwordError" style="color:red;"></span>
+    </div>
+    <button type="submit">Register</button>
+  </form>
+  <br>
+  <div class="login-link">
+    Already have an account? <a href="login.html">Login here</a>
   </div>
+</div>
+{% endblock %}
 
-</body>
-
+{% block scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <script>
-    $(document).ready(function() 
+<script>
+  $(document).ready(function() 
+  {
+    $('#signupForm').submit(function(event) 
     {
-      $('#signupForm').submit(function(event) 
+      const userData = 
       {
-        const userData = 
-        {
-          email: $('#email').val(),
-          birthday: $('#birthday').val(),
-          password: $('#password').val()
-        };
-        $.ajax(
-        {
-          type: 'POST',
-          url: 'auth/register',
-          contentType: 'application/json',
-          data: JSON.stringify(userData),
-          success: function(response) {  
-            alert('Sign up successful');
-          },
-          error: function(response) {
-            alert('Sign up failed: ' + response.responseText);  
-          }
-        });
+        email: $('#email').val(),
+        birthday: $('#birthday').val(),
+        password: $('#password').val()
+      };
+      $.ajax(
+      {
+        type: 'POST',
+        url: 'auth/register',
+        contentType: 'application/json',
+        data: JSON.stringify(userData),
+        success: function(response) {  
+          alert('Sign up successful');
+        },
+        error: function(response) {
+          alert('Sign up failed: ' + response.responseText);  
+        }
       });
     });
-  </script>
-</html>
+  });
+</script>
+{% endblock %}
 

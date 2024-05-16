@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, render_template, request, redirect, url_for, session
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, session, flash
 from firebase_admin import credentials, auth, db
 from flask_login import login_user, logout_user, login_required, logout_user, current_user
 from .models import User
@@ -115,19 +115,20 @@ def bookmarksPage():
         bookmarks_details = []
 
         if bookmarks_snapshot:
-            for bookmark_key in bookmarks_snapshot.values():
-                print("Bookmark Key: ", bookmark_key)
+            if isinstance(bookmarks_snapshot, list):
+                flash('Add bookmarks first!', category='eror')
+                return redirect(url_for('predict.searchPage'))  # Redi
+            
+            elif isinstance(bookmarks_snapshot, dict):
+                for bookmark_key in bookmarks_snapshot.values():
+                    print("Bookmark Key: ", bookmark_key)
 
-                address_ref = db.reference(f'/testfinal/{bookmark_key}')
-                address_details = address_ref.get()
+                    address_ref = db.reference(f'/testfinal/{bookmark_key}')
+                    address_details = address_ref.get()
 
-                if address_details:
-                    bookmarks_details.append((bookmark_key, address_details))
-
-            # Redirect to bookmarks page with the bookmarks details as URL parameters
-            return render_template('bookmarksPage.html', bookmarks=bookmarks_details, user=current_user)
-        else:
-            return jsonify({'message': 'No bookmarks found'}), 404
+                    if address_details:
+                        bookmarks_details.append((bookmark_key, address_details))
+        return render_template('bookmarksPage.html', bookmarks=bookmarks_details, user=current_user)           
     else:
         return jsonify({'message': 'User not authenticated'}), 401
 
@@ -199,4 +200,5 @@ def UserUpdateUserDetails():
 
     # Update the user data in Firebase
     user_ref.update(update_data)
+    flash('User details updated successfully!', category='success')
     return redirect(url_for('views.index', user_id=user_id))

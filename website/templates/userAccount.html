@@ -2,7 +2,7 @@
 
 {% block title %}Edit Page{% endblock %}
 
-{% block styles%}
+{% block styles %}
 <style>
     .container {
         background-color: #fff;
@@ -41,15 +41,15 @@
     <form id="update-form" action="{{ url_for('customer.UserUpdateUserDetails') }}" method="POST">
         <div class="form-group">
             <label for="name">Name:</label>
-            <input type="text" class="form-control editable-field" id="name" name="name" value="{{ user.name }}" readonly>
+            <input type="text" class="form-control editable-field" id="name" name="name" value="{{ userDetails.name }}" readonly>
         </div>
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" class="form-control editable-field" id="email" name="email" value="{{ user.email }}" readonly>
+            <input type="email" class="form-control" id="email" name="email" value="{{ userDetails.email }}" readonly>
         </div>
         <div class="form-group">
             <label for="birthday">Date of Birth:</label>
-            <input type="date" class="form-control editable-field" id="birthday" name="birthday" value="{{ user.birthday }}" readonly>
+            <input type="date" class="form-control editable-field" id="birthday" name="birthday" value="{{ userDetails.birthday }}" readonly>
         </div>
         <div class="form-group">
             <label for="password">New Password</label>
@@ -61,7 +61,7 @@
         </div>
         <div class="form-group">
             <label for="profile">Profile:</label>
-            <input type="text" class="form-control editable-field" id="profile" name="profile" value="{{ user.profile }}" readonly>
+            <input type="text" class="form-control" id="profile" name="profile" value="{{ userDetails.profile }}" readonly>
         </div>
         <div class="btn-container">
             <button type="button" id="edit-button" class="btn btn-primary">Edit</button>
@@ -74,47 +74,56 @@
 {% block scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    const editButton = document.getElementById("edit-button");
-    const updateButton = document.getElementById("update-button");
-    const editableFields = document.querySelectorAll(".editable-field");
+        const editButton = document.getElementById("edit-button");
+        const updateButton = document.getElementById("update-button");
+        const editableFields = document.querySelectorAll(".editable-field");
 
-    editButton.addEventListener("click", function() {
-        editableFields.forEach(function(field) {
-            field.removeAttribute("readonly");
+        editButton.addEventListener("click", function() {
+            // Make only name, birthday, password, and confirm password fields editable
+            document.getElementById("name").removeAttribute("readonly");
+            document.getElementById("birthday").removeAttribute("readonly");
+            document.getElementById("password").removeAttribute("readonly");
+            document.getElementById("confirm-password").removeAttribute("readonly");
+            
+            editButton.style.display = "none";
+            updateButton.style.display = "block";
         });
-        editButton.style.display = "none";
-        updateButton.style.display = "block";
-    });
 
-    updateButton.addEventListener("click", function() {
-        const passwordField = document.getElementById("password");
-        const confirmPasswordField = document.getElementById("confirm-password");
+        updateButton.addEventListener("click", function() {
+            const passwordField = document.getElementById("password");
+            const confirmPasswordField = document.getElementById("confirm-password");
 
-        // Check if passwords match
-        if (passwordField.value !== confirmPasswordField.value) {
-            alert("Passwords do not match!");
-            return;
-        }
+            // Check if passwords match
+            if (passwordField.value !== confirmPasswordField.value) {
+                alert("Passwords do not match!");
+                return;
+            }
 
-        // Hash the password using MD5
-        if (passwordField.value) {
-            const hashedPassword = md5(passwordField.value);
-            passwordField.value = hashedPassword;
-            confirmPasswordField.value = hashedPassword; // Ensure both fields match after hashing
-        }
+            // Hash the password using MD5 if it's not empty
+            if (passwordField.value) {
+                const hashedPassword = md5(passwordField.value);
+                passwordField.value = hashedPassword;
+                confirmPasswordField.value = hashedPassword; // Ensure both fields match after hashing
+            } else {
+                // If password is empty, remove it from the form data
+                passwordField.removeAttribute("name");
+                confirmPasswordField.removeAttribute("name");
+            }
 
-        editableFields.forEach(function(field) {
-            field.setAttribute("readonly", "readonly");
+            // Set fields back to readonly
+            document.getElementById("name").setAttribute("readonly", "readonly");
+            document.getElementById("birthday").setAttribute("readonly", "readonly");
+            document.getElementById("password").setAttribute("readonly", "readonly");
+            document.getElementById("confirm-password").setAttribute("readonly", "readonly");
+
+            editButton.style.display = "block";
+            updateButton.style.display = "none";
+
+            // Submit the form
+            document.getElementById("update-form").submit();
         });
-        editButton.style.display = "block";
-        updateButton.style.display = "none";
-
-        // Submit the form
-        document.getElementById("update-form").submit();
     });
-});
 </script>
-
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.3/dist/umd/popper.min.js"></script>

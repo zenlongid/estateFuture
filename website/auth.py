@@ -100,7 +100,7 @@ def register():
             'bookmarks': bookmarks,
             'suspended': suspended
         })
-
+        flash(f'Successfully registered!', category='success')
         return redirect(url_for('auth.login', user = current_user))
     
     except Exception as e:
