@@ -19,7 +19,7 @@ def searchPage():
         flash('Subscribe to one of our plans first or try a 7 day trial', 'warning')
         return redirect(url_for('customer.subscriptionPlans'))  # Redirect to a different page
 
-    return render_template('searchPage.html', user=user)
+    return render_template('searchPage.html', user=current_user)
     
 @predict.route('/searchByPostal', methods=['GET', 'POST'])
 def searchByPostal():

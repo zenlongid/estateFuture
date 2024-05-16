@@ -4,47 +4,7 @@
 Prediction Page
 {% endblock %}
 
-{% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <!--start of the form-->
-            <form id = "searchForm">
-                <h2 class="mb-4 text-center">Property Valuation</h2>
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Enter Addres/ postal_code" id="filter" name="filter"><br><br>
-                    <div id="liveSearchContainer"></div>
-                </div>
-                
-            </form>
-        
-            <!-- SECOND FORM -->
-        <div id="secondFormContainer" style="display: none">
-            <form id="secondForm">
-                <div class = "form-group">
-                    <label for="postalCode">Postal Code:</label>
-                    <input type="text" class="form-control" id="postalCode" name="postalCode" readonly>
-                    <select class="form-control" id="storeyRange" name="storeyRange">
-                    </select>
-                </div>
-            </form>
-        </div>
-
-        <!--THIRD FORM-->
-        <div id="thirdFormContainer" style="display: none">
-            <form id="thirdForm">
-                <div class = "form-group"> 
-                    <select class="form-control" id="flatType" name="flatType">
-                    </select>
-                </div>
-            </form>
-        </div>
-        <button id="fetchUnitButton" class="btn btn-primary">Search</button>
-
-        </div>
-    </div>
-</div>
-
+{% block styles %}
 <style>
     #liveSearchContainer {
         margin-top: 20px;
@@ -104,7 +64,51 @@ Prediction Page
         text-decoration: underline;
     }
 </style> 
+{% endblock %}
 
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <!--start of the form-->
+            <form id = "searchForm">
+                <h2 class="mb-4 text-center">Property Valuation</h2>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Enter Addres/ postal_code" id="filter" name="filter"><br><br>
+                    <div id="liveSearchContainer"></div>
+                </div>
+                
+            </form>
+        
+            <!-- SECOND FORM -->
+        <div id="secondFormContainer" style="display: none">
+            <form id="secondForm">
+                <div class = "form-group">
+                    <label for="postalCode">Postal Code:</label>
+                    <input type="text" class="form-control" id="postalCode" name="postalCode" readonly>
+                    <select class="form-control" id="storeyRange" name="storeyRange">
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <!--THIRD FORM-->
+        <div id="thirdFormContainer" style="display: none">
+            <form id="thirdForm">
+                <div class = "form-group"> 
+                    <select class="form-control" id="flatType" name="flatType">
+                    </select>
+                </div>
+            </form>
+        </div>
+        <button id="fetchUnitButton" class="btn btn-primary">Search</button>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     console.log('test');
@@ -273,15 +277,4 @@ Prediction Page
     
     
 </script>
-
 {% endblock %}
-
-
-<!--
-   TEST FORM
-<form id="filterForm" action="/resultPredictPage" method="post">
-    <label for="filter">Filter by Town/Postal/Address</label>
-    <input type="text" id="filter" name="filter"><br><br>
-    <input type="submit" value="Submit">
-</form>
--->
