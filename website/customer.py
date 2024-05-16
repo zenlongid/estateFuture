@@ -210,3 +210,7 @@ def UserUpdateUserDetails():
     user_ref.update(update_data)
     flash('User details updated successfully!', category='success')
     return redirect(url_for('views.index', user_id=user_id))
+
+@customer.route('/guestFAQ')
+def guestFAQ():
+    return render_template('guestFAQ.html')
