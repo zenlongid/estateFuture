@@ -1,30 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Our Plans</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <style>
-    /* Your CSS styles here */
-  </style>
-</head>
-<body>
-  <div id="navbar-placeholder">{% include 'nav.html' %}</div>
-  <div class="container">
-    <div class="pricing-header py-5">
-      <h2>Our Plans</h2>
-      <p>Predict your future, Predict your life</p>
-    </div>
-    <div class="card-deck" id="pricing-plans">
-      <!-- Pricing plans will be dynamically added here -->
-    </div>
-    <div class="trial-info">
-      <button class="btn btn-primary btn-trial" onclick="window.location.href='TrialPlan.html';">Try 7 Day Trial</button>
-    </div>
-  </div>
+{% extends "base.html"%}
+{% block title %}Subscription Plans{% endblock %}
 
-  <!-- PayPal script for handling payment success -->
-  <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+{% block styles %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="pricing-header py-5">
+    <h2>Our Plans</h2>
+    <p>Predict your future, Predict your life</p>
+  </div>
+  <div class="card-deck" id="pricing-plans">
+    <!-- Pricing plans will be dynamically added here -->
+  </div>
+  <div class="trial-info">
+    <button class="btn btn-primary btn-trial" onclick="window.location.href='TrialPlan.html';">Try 7 Day Trial</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
   <script>
     // Define pricing plans data
     const pricingPlans = [
@@ -125,5 +122,4 @@
     // Call renderPricingPlans function when the page loads
     window.addEventListener('load', renderPricingPlans);
   </script>
-</body>
-</html>
+{% endblock %}
