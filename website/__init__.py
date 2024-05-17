@@ -27,14 +27,15 @@ def create_app():
         
         if user_snapshot:
             email = user_snapshot.get('email')
+            name = user_snapshot.get('name')
             password = user_snapshot.get('password')
             profile = user_snapshot.get('profile')
             birthday = user_snapshot.get('birthday')
             suspended = user_snapshot.get('suspended')
             bookmarks = user_snapshot.get('bookmarks')  
-            name = user_snapshot.get('name')
+ 
             
-            user = User(user_id, email, password, profile, birthday, suspended, name, bookmarks)
+            user = User(user_id, email, name, password, profile, birthday, suspended, bookmarks)
             return user
         else:
             return None

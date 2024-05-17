@@ -1,0 +1,200 @@
+{% extends "adminNav.html" %}
+
+{% block title %}View Profiles{% endblock %}
+
+{% block styles %}
+<style>
+   body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+header {
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    margin-left: 350px; /* Add left margin to the header */
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #061B3E;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align search bar to the left */
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: left;
+    margin-left: 350px; /* Add left margin to the header */
+}
+
+.search-input {
+    width: auto; /* Increased width to 350px */
+    max-width: 80%; /* Adjusted to maintain responsiveness */
+    padding: 10px;
+    border: none;
+    border-right:  #ccc;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+    flex-grow: 1;
+}
+
+.search-input::placeholder {
+    text-align: left;
+    padding-left: 10px; /* Adjusted padding for better alignment */
+}
+
+.filter-button {
+    padding: 10px 20px;
+    background-color: #061B3E;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 20px; /* Added margin between search bar and filter button */
+}
+
+.filter-button img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 70%;
+    margin: auto;
+    text-align: left;
+    margin-left: 350px; /* Add left margin to the header */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px 15px; /* Adjusted padding for better spacing */
+    text-align: left;
+}
+
+th {
+    background-color: #061B3E; /* Dark background color for header */
+    color: white; /* White text for header */
+    text-transform: uppercase; /* Uppercase text for header */
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2; /* Light grey background for even rows */
+}
+
+tr:hover {
+    background-color: #ddd; /* Darker grey background on hover */
+}
+
+.pagination-container {
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    text-align: center;
+    margin-left: 350px; /* Add left margin to the header */
+}
+
+.pagination span,
+.pagination select,
+.pagination button {
+    margin: 5px;
+    font-size: 14px;
+}
+
+/* Adjustments for sidebar */
+.sidebar-space {
+    margin-left: 250px; /* Space for the sidebar */
+    padding-left: 20px; /* Add some padding to the left side of the main content */
+}
+
+.button-like-link {
+    display: inline-block;
+    padding: 0.5em 1em;
+    background-color: #061B3E;
+    color: white;
+    text-decoration: none;
+    border-radius: 0.25em;
+    font-size: 16px;
+    text-align: center;
+    margin: 0.5em;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <input type="text" id="searchInput" class="search-input" placeholder="Search profiles...">
+    <button class="filter-button">Filter</button>
+</div>
+
+<h1>User Profiles</h1>
+<table class="table table-striped profiles-table">
+    <thead>
+        <tr>
+            <th>Profile Name</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody id="user-list-body">
+        {% for profile in profiles %}
+            <tr>
+                <td>{{ profile.profile_name }}</td>
+                <td>{{ profile.description }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination-container">
+    <div class="pagination">
+        <span>Page 1 of 10</span>
+        <button class="btn btn-secondary">Previous</button>
+        <button class="btn btn-secondary">Next</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.getElementById("searchInput");
+        const userListBody = document.getElementById("user-list-body");
+
+        searchInput.addEventListener("keyup", function() {
+            let searchValue = this.value.toLowerCase();
+            let rows = userListBody.querySelectorAll("tr");
+
+            rows.forEach(row => {
+                let name = row.children[0].textContent.toLowerCase();
+                let description = row.children[1].textContent.toLowerCase();
+
+                if (name.includes(searchValue) || description.includes(searchValue)) {
+                    row.style.display = "";;
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
