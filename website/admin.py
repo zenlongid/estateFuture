@@ -26,11 +26,11 @@ def adminViewUsers():
 @admin.route('/userDetail/<user_id>', methods=['GET', 'POST'])
 def view_user(user_id):
     user_ref = db.reference('users')
-    user = user_ref.child(user_id).get()
+    found_user = user_ref.child(user_id).get()
 
-    if user:
+    if found_user:
         print("Found user: ", user_id)
-        return render_template('userDetail.html', user=current_user, user_id=user_id)
+        return render_template('userDetail.html', user=current_user, user_id=user_id, found_user=found_user)
     else:
         return "User not found!"
 
@@ -38,15 +38,28 @@ def view_user(user_id):
 @admin.route('/updateUserDetails/', methods=['POST'])
 def updateUserDetails():
     user_id = request.form['user_id']
-    new_profile = request.form['profile']
-    print("User ID: ", user_id )
-    print("New Profile: ", new_profile)
+    user_ref = db.reference('users').child(user_id)
+    
+    # Get the existing user data
+    user_data = user_ref.get()
+    
+    # Collect fields to update
+    updates = {}
+    if 'name' in request.form and request.form['name'] != user_data.get('name'):
+        updates['name'] = request.form['name']
+    if 'birthday' in request.form and request.form['birthday'] != user_data.get('birthday'):
+        updates['birthday'] = request.form['birthday']
+    if 'profile' in request.form and request.form['profile'] != user_data.get('profile'):
+        updates['profile'] = request.form['profile']
 
-    user_ref = db.reference('users')
-    user_ref.child(user_id).update({'profile': new_profile})
-
-    return redirect(url_for('admin.adminViewUsers', user_id=user_id, user = current_user))
-
+    # Update only the fields that have changed
+    if updates:
+        user_ref.update(updates)
+        flash('User details updated successfully!', category='success')
+    else:
+        flash('No changes detected.', category='info')
+    
+    return redirect(url_for('admin.adminViewUsers', user_id=user_id))
 
 @admin.route('/adminCreateProfile', methods=['GET', 'POST'])
 def adminCreateProfile():
@@ -83,7 +96,7 @@ def adminCreateProfile():
             'suspended': suspended
         })
         flash(f'Successfully created Account!', category='success')
-        return redirect(url_for('admin.adminViewUsers', user = current_user))
+        return redirect(url_for('admin.adminCreateProfile', user = current_user))
     except Exception as e:
         return jsonify({'message': 'User creation failed!'}), 400 
 

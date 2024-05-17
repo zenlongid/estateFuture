@@ -12,19 +12,19 @@
         <input type="hidden" id="user_id" name="user_id" value="{{ user_id }}">
         <div class="mb-3">
             <label for="name" class="form-label">Name:</label>
-            <input type="text" id="name" name="name" class="form-control" value="{{ user.name }}" readonly>
+            <input type="text" id="name" name="name" class="form-control" value="{{ found_user.name }}" readonly>
         </div>
         <div class="mb-3">
             <label for="email" class="form-label">Email:</label>
-            <input type="email" id="email" name="email" class="form-control" value="{{ user.email }}" readonly>
+            <input type="email" id="email" name="email" class="form-control" value="{{ found_user.email }}" readonly>
         </div>
         <div class="mb-3">
             <label for="birthday" class="form-label">Date of Birth:</label>
-            <input type="date" id="birthday" name="birthday" class="form-control" value="{{ user.birthday }}" readonly>
+            <input type="date" id="birthday" name="birthday" class="form-control" value="{{ found_user.birthday }}" readonly>
         </div>
         <div class="mb-3">
             <label for="profile" class="form-label">Profile:</label>
-            <input type="text" id="profile" name="profile" class="form-control" value="{{ user.profile }}" readonly>
+            <input type="text" id="profile" name="profile" class="form-control" value="{{ found_user.profile }}" readonly>
         </div>
         <button type="submit" id="update-button" class="btn btn-success" style="display: none;">Update</button>
     </form>
