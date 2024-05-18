@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
 from firebase_admin import db
-from joblib import load
 from flask_login import login_required, current_user
 import pandas as pd
 import numpy as np
