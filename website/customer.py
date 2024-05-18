@@ -13,9 +13,9 @@ paypalrestsdk.configure({
 })
 customer = Blueprint('customer', __name__)
 
-@customer.route('FAQ')
-def FAQ():
-    return render_template('FAQ.html')
+@customer.route('/customerFAQ')
+def customerFAQ():
+    return render_template('customerFAQ.html')
 
 @login_required
 @customer.route('/subscriptionPlans')

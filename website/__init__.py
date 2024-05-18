@@ -46,6 +46,7 @@ def create_app():
     from .auth import auth
     from .admin import admin
     from .customer import customer
+    from .guest import guest
     
     from .models import User
 
@@ -55,5 +56,6 @@ def create_app():
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(admin, url_prefix='/')  
     app.register_blueprint(customer, url_prefix='/')
+    app.register_blueprint(guest, url_prefix='/')
     
     return app

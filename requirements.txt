@@ -5,3 +5,5 @@ pandas
 numpy
 firebase_admin
 paypalrestsdk
+joblib
+pickle

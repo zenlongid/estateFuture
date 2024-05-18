@@ -1,97 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<title>Admin View User Account Page</title>
+{% extends "adminNav.html" %}
+{% block title %}Admin View User Account Page{% endblock %}
+
+{% block styles %}
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-    }
-
-    header {
-        font-size: 11px;
-        font-weight: bold;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        text-align: left;
-        margin-left: 350px; /* Add left margin to the header */
-    }
-
-    button {
-        padding: 10px 20px;
-        background-color: #061B3E;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-    }
-
-
     .search-container {
         display: flex;
-        align-items: center;
-        justify-content: flex-start; /* Align search bar to the left */
-        background-color: #f2f2f2;
-        padding: 10px;
-        border-radius: 5px;
+        justify-content: center;
         margin-bottom: 20px;
-        text-align: left;
-        margin-left: 350px; /* Add left margin to the header */
     }
 
     .search-input {
-        width: auto; /* Increased width to 350px */
-        max-width: 80%; /* Adjusted to maintain responsiveness */
+        flex: 1;
+        max-width: 500px;
         padding: 10px;
-        border: none;
-        border-right:  #ccc;
         border-radius: 5px 0 0 5px;
-        outline: none;
-        flex-grow: 1;
-    }
-
-    .search-input::placeholder {
-        text-align: left;
-        padding-left: 10px; /* Adjusted padding for better alignment */
+        border: 1px solid #ccc;
+        border-right: none;
     }
 
     .filter-button {
         padding: 10px 20px;
         background-color: #061B3E;
         color: white;
-        border: none;
-        border-radius: 5px;
+        border: 1px solid #061B3E;
+        border-radius: 0 5px 5px 0;
         cursor: pointer;
-        margin-left: 20px; /* Added margin between search bar and filter button */
     }
 
     .filter-button img {
         width: 20px;
         height: 20px;
-        margin-right: 10px;
     }
 
     table {
+        width: 80%;
+        margin: 0 auto;
         border-collapse: collapse;
-        width: 70%;
-        margin: auto;
-        text-align: left;
-        margin-left: 350px; /* Add left margin to the header */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     th, td {
-        border: 1px solid #ddd;
-        padding: 8px;
+        padding: 12px 15px;
         text-align: left;
+        border-bottom: 1px solid #ddd;
     }
 
     th {
-        background-color: #f2f2f2;
+        background-color: #061B3E;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
     }
 
     .action-button {
@@ -100,138 +60,70 @@
         color: white;
         border: none;
         border-radius: 5px;
+        text-decoration: none;
         cursor: pointer;
     }
-
-    .pagination-container {
-        background-color: #f2f2f2;
-        padding: 10px;
-        border-radius: 5px;
-        margin-top: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        flex-wrap: wrap;
-        text-align: left;
-        margin-left: 350px; /* Add left margin to the header */
-    }
-
-    .pagination span,
-    .pagination select,
-    .pagination button {
-        margin: 5px;
-        font-size: 14px;
-    }
-
-    /* Adjustments for sidebar */
-    .sidebar-space {
-        margin-left: 250px; /* Space for the sidebar */
-        padding-left: 20px; /* Add some padding to the left side of the main content */
-    }
-
-    .button-like-link {
-        display: inline-block;
-        padding: 0.5em 1em;
-        background-color: #061B3E;
-        color: white;
-        text-decoration: none;
-        border-radius: 0.25em;
-        font-size: 16px;
-        text-align: center;
-        margin: 0.5em;
-    }
-
-
 </style>
-</head>
-<body>
-<div id="navbar-container"> {% include 'adminNav.html' %}</div>
-    <div class="sidebar-space"> 
-        <nav class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar" id="navbar-container"> </nav>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <header class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">View User Account</h1>
+    </header>
+
+    <div class="search-container mb-4">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search for Name or Email">
     </div>
-<header>
-    <h1>View User Account</h1>
-    <a href="admin_CreateUserAccountPage.html" class="button-like-link">Create Account</a>
-</header>
 
-<div class="search-container">
-    <input type="text" id="searchInput" placeholder="Search for Name or Email">
-    <button class="filter-button"><img src="Images/filtericons.jpg" alt="Filter Icon">Filter</button>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Profile</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="user-list-body">
+            {% for user_key, user in users.items() %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.profile }}</td>
+                <td>
+                    <a href="{{ url_for('admin.view_user', user_id=user_key) }}" class="action-button">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
+{% endblock %}
 
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Profile</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody id="user-list-body">
-        {% for user_key, user in users.items() %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ user.name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{user.profile}}</td>
-            <td>
-                <a href="{{ url_for('admin.view_user', user_id=user_key) }}" class="action-button">View</a>
-                <button >Edit</button>
-                <button >Delete</button>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<div class="pagination-container">
-    <span>1-1 of 5</span>
-    <span style="margin-right: 1450px;"></span>
-    <span>The page you're on</span>
-    <select>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <!-- Add more options for additional pages if needed -->
-    </select>
-    <span style="margin-left: 3px;"> | </span>
-    <button>&#9664;</button>
-    <button>&#9654;</button>
-</div>
-
-<!-- Bootstrap JS and dependencies -->
+{% block scripts %}
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-    document.getElementById("searchInput").addEventListener("keyup", function()
-    {
+    document.getElementById("searchInput").addEventListener("keyup", function() {
         let searchValue = this.value.toLowerCase();
         let rows = document.querySelectorAll("#user-list-body tr");
 
-        rows.forEach(row =>
-            {
-                let name = row.children[1].textContent.toLowerCase();
-                let email = row.children[2].textContent.toLowerCase();
-                let profile = row.children[3].textContent.toLowerCase();
+        rows.forEach(row => {
+            let name = row.children[1].textContent.toLowerCase();
+            let email = row.children[2].textContent.toLowerCase();
+            let profile = row.children[3].textContent.toLowerCase();
 
-                if ( name.includes(searchValue) || email.includes(searchValue) || profile.includes(searchValue))
-                {
-                    row.style.display = "";
-                }
-                else
-                {
-                    row.style.display = "none";
-                }
+            if (name.includes(searchValue) || email.includes(searchValue) || profile.includes(searchValue)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
             }
-        )
-    })
+        });
+    });
 </script>
-<div id="navbar-container"> {% include 'adminNav.html' %}</div>
-</body>
-</html>
+{% endblock %}

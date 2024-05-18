@@ -61,11 +61,10 @@ def updateUserDetails():
     
     return redirect(url_for('admin.adminViewUsers', user_id=user_id))
 
-@admin.route('/adminCreateProfile', methods=['GET', 'POST'])
-def adminCreateProfile():
-    
+@admin.route('/adminCreateUser', methods=['GET', 'POST'])
+def adminCreateUser():
     if request.method == 'GET':
-        return render_template('adminCreateProfile.html', user = current_user)
+        return render_template('adminCreateUser.html', user = current_user)
 
     print("POST request received.")
     email = request.form.get('email')
@@ -96,7 +95,7 @@ def adminCreateProfile():
             'suspended': suspended
         })
         flash(f'Successfully created Account!', category='success')
-        return redirect(url_for('admin.adminCreateProfile', user = current_user))
+        return redirect(url_for('admin.adminCreateUser', user = current_user))
     except Exception as e:
         return jsonify({'message': 'User creation failed!'}), 400 
 
