@@ -91,27 +91,27 @@ def AddBookmark(unit_key):
 
         ref = db.reference(f'/users/{user_id}/bookmarks')
 
-        # Check if 'test' key exists in bookmarks
+        # Check if bookmarks already exist
         bookmarks_snapshot = ref.get()
-        if isinstance(bookmarks_snapshot, list):
-            if unit_key in bookmarks_snapshot:
-                return jsonify({'message': 'Bookmark already exists'}), 409  # Return 409 Conflict status code
-            
-        elif isinstance(bookmarks_snapshot, dict):
-            if unit_key in bookmarks_snapshot.values():
-                return jsonify({'message': 'Bookmark already exists'}), 409 
-            # Check if 'test' is in the list
-            if "test" in bookmarks_snapshot:
-                # Remove 'test' from the list
-                bookmarks_snapshot.remove("test")
-                print("Deleted 'test' bookmark")
-                ref.set(bookmarks_snapshot)  # Update the bookmarks list in the database
+        if bookmarks_snapshot:
+            if isinstance(bookmarks_snapshot, list):
+                if unit_key in bookmarks_snapshot:
+                    return jsonify({'message': 'Bookmark already exists'}), 409
+            elif isinstance(bookmarks_snapshot, dict):
+                if unit_key in bookmarks_snapshot.values():
+                    return jsonify({'message': 'Bookmark already exists'}), 409
+                # Remove 'test' from the dictionary
+                for key, value in bookmarks_snapshot.items():
+                    if value == "test":
+                        ref.child(key).delete()
+                        print("Deleted 'test' bookmark")
 
-        # Push the current unit key
-        ref.push().set(unit_key)  # Add unit_key to the list of bookmarks
+        # Add the current unit key
+        ref.push().set(unit_key)
         return jsonify({'message': 'Bookmark added successfully'})
     else:
-        return jsonify({'message': 'User not authenticated'}), 401  # Return 401 Unauthorized status code
+        return jsonify({'message': 'User not authenticated'}), 401
+
     
 @customer.route('/bookmarksPage' , methods=['GET', 'POST'])
 def bookmarksPage():
@@ -121,21 +121,31 @@ def bookmarksPage():
         bookmarks_snapshot = ref.get()
         print("Bookmarks Snapshot: ", bookmarks_snapshot)
         bookmarks_details = []
-
-        if bookmarks_snapshot:
-            if isinstance(bookmarks_snapshot, list):
-                flash('Add bookmarks first!', category='eror')
-                return redirect(url_for('predict.searchPage'))  # Redi
+        
+        if bookmarks_snapshot is None:
+            flash('Add bookmarks first!', category='error')
+            return redirect(url_for('predict.searchPage'))
             
-            elif isinstance(bookmarks_snapshot, dict):
-                for bookmark_key in bookmarks_snapshot.values():
-                    print("Bookmark Key: ", bookmark_key)
+        elif isinstance(bookmarks_snapshot, dict):
+            if len(bookmarks_snapshot) == 0:
+                flash('Add bookmarks first!', category='error')
+                return redirect(url_for('predict.searchPage'))
+            
+            for bookmark_key in bookmarks_snapshot.values():
+                for key, value in bookmarks_snapshot.items():
+                    if value == "test":
+                        ref.child(key).delete()
+                        print("Deleted 'test' bookmark")
+                        flash('Add bookmarks first!', category='error')
+                        return redirect(url_for('predict.searchPage'))          
+                    else:
+                        print("Bookmark Key: ", bookmark_key)
 
-                    address_ref = db.reference(f'/testfinal/{bookmark_key}')
-                    address_details = address_ref.get()
+                address_ref = db.reference(f'/video/{bookmark_key}')
+                address_details = address_ref.get()
 
-                    if address_details:
-                        bookmarks_details.append((bookmark_key, address_details))
+                if address_details:
+                    bookmarks_details.append((bookmark_key, address_details))
         return render_template('bookmarksPage.html', bookmarks=bookmarks_details, user=current_user)           
     else:
         return jsonify({'message': 'User not authenticated'}), 401
@@ -157,7 +167,7 @@ def compareBookmarks():
         selected_addresses_details = []
 
         for address_id in selected_address_query:
-            address_ref = db.reference(f'/testfinal/{address_id}')
+            address_ref = db.reference(f'/video/{address_id}')
             #print("Address reference for ID", address_id, ":", address_ref)  
             address_details = address_ref.get()
             #print("Address details for ID", address_id, ":", address_details)  
@@ -213,4 +223,4 @@ def UserUpdateUserDetails():
 
 @customer.route('/guestFAQ')
 def guestFAQ():
-    return render_template('guestFAQ.html')
+    return render_template('guestFAQ.html', user = current_user)
