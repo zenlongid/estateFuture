@@ -81,6 +81,25 @@ def calculateAmount(subscriptionPlan):
     }
     return base_prices.get(subscriptionPlan, '0.0')
 
+@customer.route('/startTrial', methods=['POST'])
+def startTrial():
+    if current_user.is_authenticated:
+        user_id = current_user.id
+        user_ref = db.reference(f'/users/{user_id}')
+        user_data = user_ref.get()
+
+        if user_data.get('profile') == "Basic":
+            user_ref.update({'profile': 'Trial'})
+            flash('Your profile has been updated to Trial. Enjoy your 7-day trial!', 'success')
+            return jsonify({'redirect': url_for('customer.trialPage')})
+        else:
+            return jsonify({'message': 'You are not eligible for the trial'}), 400
+    else:
+        return jsonify({'message': 'User not authenticated'}), 401
+
+@customer.route('/trialPage')
+def trialPage():
+    return render_template('trialPage.html', user=current_user)
 
 @customer.route('/addBookmark/<unit_key>', methods=['POST'])
 def AddBookmark(unit_key):

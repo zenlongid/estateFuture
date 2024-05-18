@@ -3,6 +3,12 @@
 
 {% block styles %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+    .trial-info {
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -14,112 +20,142 @@
   <div class="card-deck" id="pricing-plans">
     <!-- Pricing plans will be dynamically added here -->
   </div>
+  {% if user.profile == 'Basic' %}
   <div class="trial-info">
-    <button class="btn btn-primary btn-trial" onclick="window.location.href='TrialPlan.html';">Try 7 Day Trial</button>
+    <button id="startTrialButton" class="btn btn-primary btn-trial">Try 7 Day Trial</button>
   </div>
+  {% endif %}
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script src="https://www.paypalobjects.com/api/checkout.js"></script>
-  <script>
-    // Define pricing plans data
-    const pricingPlans = [
-      {
-        type: 'Monthly',
-        description: 'Unlock unlimited Price Prediction Valuations',
-        price: '$39.95',
-        plan: 'monthly'
-      },
-      {
-        type: 'Quarterly',
-        description: 'Unlock unlimited Price Prediction Valuations',
-        price: '$19.95 per month',
-        totalPrice: '$59.85',
-        plan: 'quarterly'
-      },
-      {
-        type: 'Annual',
-        description: 'Unlock unlimited Price Prediction Valuations',
-        price: '$9.95 per month',
-        totalPrice: '$119.40',
-        plan: 'annual'
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // Define pricing plans data
+  const pricingPlans = [
+    {
+      type: 'Monthly',
+      description: 'Unlock unlimited Price Prediction Valuations',
+      price: '$39.95',
+      plan: 'monthly'
+    },
+    {
+      type: 'Quarterly',
+      description: 'Unlock unlimited Price Prediction Valuations',
+      price: '$19.95 per month',
+      totalPrice: '$59.85',
+      plan: 'quarterly'
+    },
+    {
+      type: 'Annual',
+      description: 'Unlock unlimited Price Prediction Valuations',
+      price: '$9.95 per month',
+      totalPrice: '$119.40',
+      plan: 'annual'
+    }
+  ];
+
+  // Function to render pricing plans
+  function renderPricingPlans() {
+    const container = document.getElementById('pricing-plans');
+    pricingPlans.forEach(plan => {
+      const card = document.createElement('div');
+      card.classList.add('card');
+
+      const cardBody = document.createElement('div');
+      cardBody.classList.add('card-body', 'd-flex', 'flex-column');
+
+      const title = document.createElement('h5');
+      title.classList.add('card-title');
+      title.textContent = plan.type;
+
+      const description = document.createElement('p');
+      description.classList.add('card-text');
+      description.textContent = plan.description;
+
+      const price = document.createElement('p');
+      price.classList.add('card-text');
+      price.innerHTML = `<strong>${plan.price}</strong>`;
+
+      if (plan.totalPrice) {
+        const totalPrice = document.createElement('p');
+        totalPrice.classList.add('card-text', 'total-price');
+        totalPrice.innerHTML = `Total price: <strong>${plan.totalPrice}</strong>`;
+        cardBody.appendChild(totalPrice);
       }
-    ];
 
-    // Function to render pricing plans
-    function renderPricingPlans() {
-      const container = document.getElementById('pricing-plans');
-      pricingPlans.forEach(plan => {
-        const card = document.createElement('div');
-        card.classList.add('card');
-
-        const cardBody = document.createElement('div');
-        cardBody.classList.add('card-body', 'd-flex', 'flex-column');
-
-        const title = document.createElement('h5');
-        title.classList.add('card-title');
-        title.textContent = plan.type;
-
-        const description = document.createElement('p');
-        description.classList.add('card-text');
-        description.textContent = plan.description;
-
-        const price = document.createElement('p');
-        price.classList.add('card-text');
-        price.innerHTML = `<strong>${plan.price}</strong>`;
-
-        if (plan.totalPrice) {
-          const totalPrice = document.createElement('p');
-          totalPrice.classList.add('card-text', 'total-price');
-          totalPrice.innerHTML = `Total price: <strong>${plan.totalPrice}</strong>`;
-          cardBody.appendChild(totalPrice);
-        }
-
-        const button = document.createElement('button');
-        button.classList.add('btn', 'btn-primary', 'btn-block', 'mt-auto');
-        button.textContent = `Choose ${plan.type}`;
-        button.dataset.plan = plan.plan;
-        button.addEventListener('click', () => {
-          initiatePayment(plan.plan);
-        });
-
-        cardBody.appendChild(title);
-        cardBody.appendChild(description);
-        cardBody.appendChild(price);
-        cardBody.appendChild(button);
-
-        card.appendChild(cardBody);
-        container.appendChild(card);
+      const button = document.createElement('button');
+      button.classList.add('btn', 'btn-primary', 'btn-block', 'mt-auto');
+      button.textContent = `Choose ${plan.type}`;
+      button.dataset.plan = plan.plan;
+      button.addEventListener('click', () => {
+        initiatePayment(plan.plan);
       });
-    }
 
-    // Function to initiate payment
-    function initiatePayment(plan) {
-      // Make a POST request to the backend to initiate payment
-      fetch('/processPayment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ subscriptionPlan: plan })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Redirect to PayPal approval URL
-          window.location.href = data.approvalUrl;
-        } else {
-          alert('Payment initiation failed: ' + data.error);
-        }
-      })
-      .catch(error => {
-        console.error('Error initiating payment:', error);
-        alert('Error initiating payment. Please try again later.');
-      });
-    }
+      cardBody.appendChild(title);
+      cardBody.appendChild(description);
+      cardBody.appendChild(price);
+      cardBody.appendChild(button);
 
-    // Call renderPricingPlans function when the page loads
-    window.addEventListener('load', renderPricingPlans);
-  </script>
+      card.appendChild(cardBody);
+      container.appendChild(card);
+    });
+  }
+
+  // Function to initiate payment
+  function initiatePayment(plan) {
+    // Make a POST request to the backend to initiate payment
+    fetch('/processPayment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ subscriptionPlan: plan })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Redirect to PayPal approval URL
+        window.location.href = data.approvalUrl;
+      } else {
+        alert('Payment initiation failed: ' + data.error);
+      }
+    })
+    .catch(error => {
+      console.error('Error initiating payment:', error);
+      alert('Error initiating payment. Please try again later.');
+    });
+  }
+
+  // Call renderPricingPlans function when the page loads
+  window.addEventListener('load', renderPricingPlans);
+
+  // Handle the click event for the trial button
+  document.getElementById('startTrialButton').addEventListener('click', function() {
+    fetch('/startTrial', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(text => { throw new Error(text) })
+      }
+      return response.json()
+    })
+    .then(data => {
+      if (data.redirect) {
+        window.location.href = data.redirect;
+      } else {
+        alert(data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error starting trial:', error);
+      alert('Error starting trial. Please try again later.');
+    });
+  });
+</script>
 {% endblock %}

@@ -8,8 +8,8 @@
         <button type="button" id="edit-button" class="btn btn-primary">Edit</button>
     </header>
 
-    <form id="userDetailsForm" action="/updateUserDetails/" method="POST" class="needs-validation" novalidate>
-        <input type="hidden" id="user_id" name="user_id" value="{{ user_id }}">
+    <form id="userDetailsForm" action="{{ url_for('admin.updateUserDetails') }}" method="POST" class="needs-validation" novalidate>
+        <input type="hidden" name="user_id" value="{{ user_id }}">
         <div class="mb-3">
             <label for="name" class="form-label">Name:</label>
             <input type="text" id="name" name="name" class="form-control" value="{{ found_user.name }}" readonly>
@@ -24,7 +24,13 @@
         </div>
         <div class="mb-3">
             <label for="profile" class="form-label">Profile:</label>
-            <input type="text" id="profile" name="profile" class="form-control" value="{{ found_user.profile }}" readonly>
+            <select id="profile" name="profile" class="form-control" disabled>
+                <option value="Basic" {% if found_user.profile == 'Basic' %}selected{% endif %}>Basic</option>
+                <option value="Trial" {% if found_user.profile == 'Trial' %}selected{% endif %}>Trial</option>
+                <option value="Monthly" {% if found_user.profile == 'Monthly' %}selected{% endif %}>Monthly</option>
+                <option value="Quarterly" {% if found_user.profile == 'Quarterly' %}selected{% endif %}>Quarterly</option>
+                <option value="Annual" {% if found_user.profile == 'Annual' %}selected{% endif %}>Annual</option>
+            </select>
         </div>
         <button type="submit" id="update-button" class="btn btn-success" style="display: none;">Update</button>
     </form>
@@ -50,7 +56,11 @@
 
         editButton.addEventListener("click", function() {
             editableFields.forEach(function(field) {
-                field.readOnly = !field.readOnly;
+                if (field.tagName === 'SELECT') {
+                    field.disabled = false;
+                } else {
+                    field.readOnly = false;
+                }
             });
             editButton.style.display = "none";
             updateButton.style.display = "block";
@@ -82,9 +92,12 @@
             .then(data => {
                 console.log('Success:', data);
                 // Optionally, you can redirect or show a success message here
+                alert('User details updated successfully!');
+                window.location.reload(); // Reload the page to reflect changes
             })
             .catch((error) => {
                 console.error('Error:', error);
+                alert('Error updating user details.');
             });
         });
     });
