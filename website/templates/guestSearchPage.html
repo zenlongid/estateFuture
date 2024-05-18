@@ -111,166 +111,136 @@ Prediction Page
 {% block scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+$(document).ready(function() {
     console.log('test');
 
-    $(document).ready(function() 
-    {
-        $('#filter').on('input', function()
-        {
-            var query = $(this).val();
-            console.log('Query:', query)
-            $.ajax(
-            {
-                url: '/guestSearchByPostal',
-                method: 'GET',
-                data: { query: query },
-                success: function(response) 
-                {
-                    displaySearchPostalResults(response);
-                    console.log('Response:', response);
-                },
-                error: function(error) 
-                {
-                    console.error('Error:', error);
-                }
-            });
-        });
-
-        function displaySearchPostalResults(results) 
-        {
-            var container = $('#liveSearchContainer');
-            container.empty();  
-
-            if (results.length > 0) 
-            {
-                var list = $('<ul></ul>');
-                results.forEach(function(item) 
-                {
-                    var listItem = $('<li></li>')
-                    var link = $('<a></a>').text(item.town + ', ' + item.postal_code + ', ' + item.address);
-                    //var link = $('<a></a>').attr('href', '/predictResult/' + item.postal_code).text(item.town + ', ' + item.postal_code + ', ' + item.address);
-                    
-                    link.click(function()
-                    {
-                        var postalCode = item.postal_code;
-                        console.log('Stored Postal:', postalCode);
-
-                        $('#postalCode').val(postalCode);
-                        $('#secondFormContainer').show();
-                        $('#thirdFormContainer').show();
-                        fetchStoreyRange(postalCode);
-                    });
-                    //console.log("List Item: ",listItem)
-                    //console.log("Link URL: ", link.attr('href')); // Log the URL of the anchor tag
-                    console.log("item: ",item.postal_code)
-                    // console.log("item: ",item.resale_price)
-                    //console.log("results: ", results)
-                    listItem.append(link);
-                    list.append(listItem);
-                });
-                container.append(list);
+    // Handle input in the filter field
+    $('#filter').on('input', function() {
+        var query = $(this).val();
+        console.log('Query:', query);
+        $.ajax({
+            url: '/guestSearchByPostal',
+            method: 'GET',
+            data: { query: query },
+            success: function(response) {
+                displaySearchPostalResults(response);
+                console.log('Response:', response);
+            },
+            error: function(error) {
+                console.error('Error:', error);
             }
-        }
-        
+        });
     });
 
-    //SECOND FORM
-    function fetchStoreyRange(postalCode)
-        {
-            $.ajax(
-            {
-                url: '/guestSearchByStorey',
-                method: 'GET',
-                data: { query: postalCode },
-                success: function(response) 
-                {
-                    displayStoreyRanges(response);
-                    console.log('Response:', response);
-                },
-                error: function(error) 
-                {
-                    console.error('Error fetching storey ranges:', error);
-                }
-            });                      
-        }
+    // Display search results for postal codes
+    function displaySearchPostalResults(results) {
+        var container = $('#liveSearchContainer');
+        container.empty();
 
-    function displayStoreyRanges(storeyRanges)
-    {
-        var select = $('#storeyRange')
+        if (results.length > 0) {
+            var list = $('<ul></ul>');
+            results.forEach(function(item) {
+                var listItem = $('<li></li>');
+                var link = $('<a></a>').text(item.town + ', ' + item.postal_code + ', ' + item.address);
+
+                link.click(function() {
+                    var postalCode = item.postal_code;
+                    console.log('Stored Postal:', postalCode);
+
+                    $('#postalCode').val(postalCode);
+                    $('#secondFormContainer').show();
+                    $('#thirdFormContainer').hide();  // Hide the third form initially
+                    fetchStoreyRange(postalCode);
+                });
+
+                listItem.append(link);
+                list.append(listItem);
+            });
+            container.append(list);
+        }
+    }
+
+    // Fetch storey ranges based on the selected postal code
+    function fetchStoreyRange(postalCode) {
+        $.ajax({
+            url: '/guestSearchByStorey',
+            method: 'GET',
+            data: { query: postalCode },
+            success: function(response) {
+                displayStoreyRanges(response);
+                console.log('Response:', response);
+            },
+            error: function(error) {
+                console.error('Error fetching storey ranges:', error);
+            }
+        });
+    }
+
+    // Display storey ranges in the second form
+    function displayStoreyRanges(storeyRanges) {
+        var select = $('#storeyRange');
         select.empty();
 
-        storeyRanges.forEach(function(storeyRange)
-        {
+        storeyRanges.forEach(function(storeyRange) {
             var option = $('<option></option>').text(storeyRange);
             select.append(option);
         });
 
-        $(document).ready(function()
-        {
-            $('#storeyRange').on('change', function()
-            {
-                var postalCode = $('#postalCode').val();
-                var storeyRange = $(this).val();
-                console.log('Storey Range:', storeyRange);
-                fetchType(postalCode);
-            });
+        // Ensure the event listener is set only once
+        $('#storeyRange').off('change').on('change', function() {
+            var postalCode = $('#postalCode').val();
+            var storeyRange = $(this).val();
+            console.log('Storey Range:', storeyRange);
+            fetchType(postalCode, storeyRange);
+        });
+
+        // Trigger the change event if there is only one option
+        if (storeyRanges.length === 1) {
+            $('#storeyRange').trigger('change');
+        }
+    }
+
+    // Fetch flat types based on the selected postal code and storey range
+    function fetchType(postalCode, storeyRange) {
+        $.ajax({
+            url: '/guestSearchByType',
+            method: 'GET',
+            data: { query: postalCode, storeyRange: storeyRange },
+            success: function(response) {
+                displayTypes(response);
+                $('#thirdFormContainer').show();  // Show the third form once types are fetched
+                console.log('Response:', response);
+            },
+            error: function(error) {
+                console.error('Error fetching types:', error);
+            }
         });
     }
 
-    // THIRD FORM
-    function fetchType(postalCode)
-    {
-        $(document).ready(function()
-        {
-            $('#storeyRange').on('change', function()
-            {
-                var postalCode = $('#postalCode').val();
-                var storeyRange = $(this).val();
-                console.log('Storey Range for third form:', storeyRange);
-                $.ajax(
-                {
-                    url: '/guestSearchByType',
-                    method: 'GET',
-                    data: {query: postalCode, storeyRange: storeyRange},
-                    success: function(response) 
-                    {
-                        displayTypes(response);
-                    },
-                    error: function(error) 
-                    {
-                        console.error('Error fetching types:', error);
-                    }
-                });
-            });
-        });             
-    }
-    
-    function displayTypes(flatTypes)
-    {
-        var select = $('#flatType')
+    // Display flat types in the third form
+    function displayTypes(flatTypes) {
+        var select = $('#flatType');
         select.empty();
 
-        flatTypes.forEach(function(flatType)
-        {
+        flatTypes.forEach(function(flatType) {
             var option = $('<option></option>').text(flatType);
             select.append(option);
         });
     }
 
-    $(document).ready(function() 
-    {
-    // Event listener for the button click
-        $('#fetchUnitButton').on('click', function(event) {
-            console.log('Button clicked');
-            event.preventDefault();
-            // Get the values of postalCode, storeyRange, and flatType
-            var postalCode = $('#postalCode').val();
-            var storeyRange = $('#storeyRange').val();
-            var flatType = $('#flatType').val();
+    // Handle the click event for the fetch unit button
+    $('#fetchUnitButton').on('click', function(event) {
+        console.log('Button clicked');
+        event.preventDefault();
+        // Get the values of postalCode, storeyRange, and flatType
+        var postalCode = $('#postalCode').val();
+        var storeyRange = $('#storeyRange').val();
+        var flatType = $('#flatType').val();
 
-            // Redirect to searchResult page immediately after button click
-            window.location.href = '/guestSearchResult?postalCode=' + postalCode + '&storeyRange=' + storeyRange + '&flatType=' + flatType;
-        });
-    });    
+        // Redirect to searchResult page immediately after button click
+        window.location.href = '/guestSearchResult?postalCode=' + postalCode + '&storeyRange=' + storeyRange + '&flatType=' + flatType;
+    });
+});
+
 </script>
 {% endblock %}

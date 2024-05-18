@@ -67,26 +67,34 @@
 
 <div class="faq-container">
   <div class="faq-title" onclick="toggleFAQ('faq2')">
-    FAQ Question 2 ?
+    What are the payment options available ?
     <i class="fas fa-chevron-down"></i> 
   </div>
   <div class="faq-content" id="faq2">
-    <p>Answer to question 2 goes here.</p>
+    <p>PayPal. </p>
   </div>
 </div>
 
 <div class="faq-container">
   <div class="faq-title" onclick="toggleFAQ('faq3')">
-    FAQ Question 3 ?
+    Are there any free features available on the Estate Future platform?
     <i class="fas fa-chevron-down"></i> 
   </div>
   <div class="faq-content" id="faq3">
-    <p>Answer to question 3 goes here.</p>
+    <p>Yes, Estate Future provides certain free features, such as basic property price predictions. For more advanced features, detailed analyses, and personalized insights, users can subscribe to our premium plans.</p>
   </div>
 </div>
 
-<!-- May forgo this is we don't have inquiry page -->
-<a href="" class="contact-link">Unable to find your answer? Contact us</a>
+<div class="faq-container">
+  <div class="faq-title" onclick="toggleFAQ('faq4')">
+    What should I do if I am unable to find the answers to my questions?
+    <i class="fas fa-chevron-down"></i> 
+  </div>
+  <div class="faq-content" id="faq4">
+    <p> If you are unable to find the answers to your questions on the FAQ page, please contact our support team directly via email at support@estatefuture.sg or call us at +65-1234-5678. 
+      Our team is available to assist you with any queries you may have.</p>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -102,7 +110,7 @@
       element.style.display = 'block';
       container.classList.add('expanded');
     }
-    // Change the icon direction when it expands or collapses (up or down)
+    // Change the icons direction when its expends or collapes (up or down) :p 
     var icon = container.querySelector('.faq-title i');
     if (icon.classList.contains('fa-chevron-down')) {
       icon.classList.remove('fa-chevron-down');
