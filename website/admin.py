@@ -107,10 +107,10 @@ def adminCreateUser():
 def adminDeleteUser(user_id):
     user_ref = db.reference('users')
     found_user = user_ref.child(user_id).get()
-
     if found_user:
         user_ref.child(user_id).delete()
         flash(f'User {user_id} deleted successfully!', category='success')
+        return redirect(url_for('admin.adminViewUsers'))
         
     else:
         flash(f'User {user_id} not found!', category='error')
