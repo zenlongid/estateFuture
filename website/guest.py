@@ -6,15 +6,10 @@ import pandas as pd
 import numpy as np
 import requests
 import json
-import pickle
 import os
 
 guest = Blueprint('guest', __name__)
 
-
-model_path = os.path.join('website', 'model', 'linear_regression_model.pkl')    
-with open(model_path, 'rb') as file:
-    model = pickle.load(file)
 
 @guest.route('/guestSearchPage')
 def guestSearchPage():
@@ -124,36 +119,7 @@ def display_item():
             print("Key 'key' not found in unit_display dict")
 
     key = unit_display['key']
-    unit_display_df = pd.DataFrame(unit_display, index=[0])
-
-    #dropping unnecessary columns to pass into model
-    input_features = model.feature_names_in_
-    columns_to_drop = [col for col in unit_display_df.columns if col not in input_features]
-    unit_display_df = unit_display_df.drop(columns=columns_to_drop)
-
-    unit_display_df = unit_display_df.reindex(columns=input_features, fill_value=0)
-
-    #make prediction            
-    prediction = make_prediction(model, unit_display_df)
-    print("Prediction: ", prediction)
-    increment_prediction_count(unit_display['town'])
 
     #convert df to html
     #unit_display_html = unit_display_df.to_html()  
-    return render_template('guestSearchResult.html', user=current_user, unit_display=unit_display, prediction=prediction[0], key=key)
-
-def make_prediction(model, input_features):
-    input_features = np.array(input_features)
-
-    if len(input_features.shape) == 1:
-        input_features = input_features.reshape(1, -1) 
-
-    prediction = model.predict(input_features)
-    return prediction
-
-def increment_prediction_count(town):
-    ref = db.reference(f'/uniqueTowns/{town}/prediction_count')
-    prediction_count = ref.get()
-    if prediction_count is None:
-        prediction_count = 0
-    ref.set(prediction_count + 1)
+    return render_template('guestSearchResult.html', user=current_user, unit_display=unit_display, key=key)
